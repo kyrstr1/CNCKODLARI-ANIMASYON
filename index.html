@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CNC Torna Kodları – İnteraktif Öğrenme</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Serif&display=swap">
+<style>
+:root{color-scheme:dark;--bg:#0a0e17;--p:#101727;--ln:#222d45;--ln2:#33425f;--t:#dfe6f2;--m:#8593ab;--ice:#a8c8f0;--vi:#9a8ee0;--sf:"Instrument Serif",ui-serif,Georgia,serif;--mo:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:calc(72px + env(safe-area-inset-top,0px))}
+body{margin:0;color:var(--t);font:16px/1.65 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;background-color:var(--bg);background-image:linear-gradient(rgba(168,200,240,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(168,200,240,.03) 1px,transparent 1px);background-size:36px 36px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(10,14,23,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--ln)}
+nav .in{max-width:1040px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:60px}
+.logo{font:600 13px var(--mo);letter-spacing:.22em;text-transform:uppercase}.logo b{color:var(--vi)}
+nav ul{display:flex;gap:4px;list-style:none;margin:0;padding:0}
+nav a{position:relative;display:block;color:var(--m);text-decoration:none;padding:8px 12px;font:500 12px var(--mo);letter-spacing:.12em;text-transform:uppercase;transition:color .2s}
+nav a::after{content:"";position:absolute;left:12px;right:12px;bottom:3px;height:1px;background:var(--ice);transform:scaleX(0);transform-origin:left;transition:transform .25s}
+nav a:hover{color:var(--t)}nav a:hover::after{transform:none}
+#bg{display:none;background:none;border:1px solid var(--ln2);border-radius:6px;color:var(--t);font-size:18px;padding:2px 10px;cursor:pointer}
+@media(max-width:640px){#bg{display:block}nav ul{display:none;position:absolute;top:60px;left:0;right:0;flex-direction:column;background:var(--p);padding:8px 16px;border-bottom:1px solid var(--ln)}nav ul.open{display:flex}}
+main{max-width:1040px;margin:auto;padding:0 24px 48px;counter-reset:s}
+.hero{padding:72px 0 28px}
+.eb{font:500 12px var(--mo);letter-spacing:.2em;text-transform:uppercase;color:var(--vi);margin-bottom:18px}
+h1{font:400 clamp(40px,7vw,72px)/1.02 var(--sf);letter-spacing:-.01em;margin:0 0 18px}h1 em{color:var(--ice)}
+.mu{color:var(--m)}.hero p{max-width:620px;margin:0 0 28px;color:var(--m)}
+#q{width:100%;padding:15px 18px;border-radius:8px;border:1px solid var(--ln2);background:rgba(16,23,39,.8);color:var(--t);font:500 15px var(--mo);outline:0;transition:border-color .2s,box-shadow .2s}
+#q::placeholder{color:#5d6b85}#q:focus{border-color:var(--ice);box-shadow:0 0 0 3px rgba(168,200,240,.12)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{padding:6px 12px;border-radius:6px;border:1px solid var(--ln2);background:none;color:var(--m);cursor:pointer;font:500 12px var(--mo);letter-spacing:.04em;transition:.2s}
+.chip:hover{color:var(--t);border-color:var(--ice)}.chip.on{background:var(--ice);border-color:var(--ice);color:#0a0e17}
+.cs{position:relative;margin-top:64px;padding-top:14px;border-top:1px solid var(--ln2)}
+.cs::before{content:"";position:absolute;top:-5px;left:0;right:0;height:5px;background:repeating-linear-gradient(90deg,var(--ln2) 0 1px,transparent 1px 24px)}
+h2{font:400 38px/1.1 var(--sf);margin:6px 0 8px}
+.cs h2::before{counter-increment:s;content:"§ 0" counter(s);display:block;font:500 11px var(--mo);letter-spacing:.2em;color:var(--vi);margin-bottom:8px}
+#about{margin-top:64px;border-top:1px solid var(--ln2);padding-top:14px}
+h3{font:500 12px var(--mo);color:var(--ice);text-transform:uppercase;letter-spacing:.16em;margin:34px 0 12px}
+h3::before{content:"";display:inline-block;width:22px;height:1px;background:var(--vi);margin-right:12px;vertical-align:middle}
+.wr{overflow-x:auto;border-top:1px solid var(--ln2)}
+table{width:100%;border-collapse:collapse}
+th{font:500 11px var(--mo);letter-spacing:.12em;color:var(--m);text-align:left;padding:12px 14px 8px;text-transform:uppercase}
+th:last-child{text-align:right}
+td{padding:13px 14px;border-top:1px solid var(--ln);vertical-align:middle;font-size:15px;color:#c3cddd}
+tbody tr{cursor:pointer;transition:background .18s}tbody tr:hover{background:rgba(154,142,224,.07)}
+td:first-child{font:600 16px var(--mo);color:var(--ice);width:76px;white-space:nowrap;transition:box-shadow .2s}
+tbody tr:hover td:first-child{box-shadow:inset 2px 0 var(--vi)}
+.go{text-align:right;white-space:nowrap;width:1%}.w{color:var(--vi);cursor:help}
+.btn{display:inline-flex;gap:8px;align-items:center;padding:7px 12px;border:1px solid rgba(154,142,224,.55);border-radius:6px;background:none;color:var(--t);font:500 12px var(--mo);letter-spacing:.04em;cursor:pointer;transition:.2s}
+.btn i{font-style:normal;color:var(--vi);transition:transform .2s}
+.btn:hover,tr:hover .btn{border-color:var(--vi);background:rgba(154,142,224,.14)}
+tr:hover .btn i,.btn:hover i{transform:translateX(3px)}
+.btn.i{border-color:var(--ln2);color:var(--m)}
+@media(max-width:520px){main{padding:0 16px 40px}td,th{padding:11px 8px;font-size:14px}td:first-child{width:56px;font-size:15px}.btn{padding:7px 10px}.btn span{display:none}}
+.ov{position:fixed;inset:0;z-index:50;background:rgba(5,8,14,.78);display:flex;align-items:center;justify-content:center;padding:14px;opacity:0;pointer-events:none;transition:opacity .25s}
+.ov.on{opacity:1;pointer-events:auto}
+.md{position:relative;background:var(--p);border:1px solid var(--ln2);border-radius:10px;box-shadow:0 24px 60px rgba(0,0,0,.5);width:100%;max-width:720px;max-height:92vh;max-height:calc(100dvh - 28px);overflow:auto;padding:24px;transform:translateY(14px) scale(.98);transition:transform .25s}
+.ov.on .md{transform:none}
+.big{font:600 clamp(40px,10vw,60px)/1 var(--mo);color:var(--ice);margin-bottom:8px}
+.x{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:6px;border:1px solid var(--ln2);background:none;color:var(--t);cursor:pointer;font-size:14px;transition:.2s}.x:hover{border-color:var(--vi);background:rgba(154,142,224,.14)}
+canvas{width:100%;height:auto;display:block;background:#070a11;border:1px solid var(--ln);border-radius:8px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;margin:12px 0;font:500 12px var(--mo);color:var(--m)}
+.lg{font:500 12px var(--mo);color:var(--m);margin:0 0 12px}.lg i{display:inline-block;width:22px;height:3px;margin:0 8px 3px 12px;vertical-align:middle}.lg i:first-child{margin-left:0}
+.lg .r{background:repeating-linear-gradient(90deg,var(--ice) 0 4px,transparent 4px 8px)}.lg .k{background:#8f82e8}
+pre{background:#070a11;border:1px solid var(--ln);border-radius:8px;padding:12px 14px;color:var(--ice);overflow:auto;font:13px/1.6 var(--mo);margin:0}
+.warn{border-left:2px solid var(--vi);background:rgba(154,142,224,.08);color:#cfc8f5;border-radius:0 6px 6px 0;padding:10px 14px;font-size:14px}
+.lt{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:0;border-top:1px solid var(--ln2)}
+.lt div{padding:10px 4px;border-bottom:1px solid var(--ln);font-size:14px;color:var(--m)}
+.lt b{font:600 16px var(--mo);color:var(--ice);margin-right:12px}
+footer{border-top:1px solid var(--ln);text-align:center;color:var(--m);font:12px var(--mo);letter-spacing:.06em;padding:24px}
+[hidden]{display:none!important}
+</style></head><body>
+<nav><div class="in"><span class="logo">CNC<b>.</b>Torna</span><button id="bg" aria-label="Menü">☰</button>
+<ul id="mn"><li><a href="#home">Ana Sayfa</a></li><li><a href="#g">G Kodları</a></li><li><a href="#m">M Kodları</a></li><li><a href="#about">Hakkında</a></li></ul></div></nav>
+<main>
+<section class="hero" id="home"><div class="eb">Fanuc tipi torna · G-kod sistemi A</div><h1>CNC torna kodlarını <em>izleyerek</em> öğren</h1>
+<p>Tablodaki herhangi bir satıra tıkla; takımın gerçekte nasıl hareket ettiğini ve parçanın nasıl şekillendiğini adım adım gör. Açıklamalar Fanuc tipi torna kontrolünü temel alır.</p>
+<input id="q" type="search" placeholder="Kod ara… (örn. G75, M03, vida, kanal)" autocomplete="off"><div class="chips" id="ch"></div></section>
+<p id="no" class="mu" hidden>Sonuç bulunamadı.</p>
+<section class="cs" id="g"><h2>G Kodları</h2><p class="mu">Hareketin ve işleme biçiminin nasıl olacağını belirleyen kodlar. ▶ işaretli satırların animasyonu vardır. ⚠ işareti, anlamı kontrole göre değişen kodları gösterir.</p><div id="gt"></div></section>
+<section class="cs" id="m"><h2>M Kodları</h2><p class="mu">Makine fonksiyonları: mil, soğutma, program akışı. ⚠ M kodları makine üreticisine göre değişebilir.</p><div id="mt2"></div></section>
+<section id="about"><h2>Hakkında</h2>
+<p class="mu">Bu site, CNC tornayı yeni öğrenenler için hazırlanmış basit bir eğitim aracıdır. Açıklamalar Fanuc tipi torna kontrolü (G kod sistemi A) esas alınarak yazılmıştır. G90, G92, G94, G98, G99 gibi kodlar kontrol sistemine göre farklı anlamlara gelebilir; M kodları ise makine üreticisine göre değişir. Gerçek makinede mutlaka makinenizin programlama kılavuzunu esas alın. Animasyonlar öğretici olması için sadeleştirilmiştir: kesikli mavi çizgi hızlı hareketi, mor çizgi kesme hareketini gösterir. X ekseni çap yönünde yukarı, Z ekseni boy yönünde sağa (ayna ucuna doğru) çizilmiştir.</p>
+<h3>Adres harfleri</h3><div class="lt" id="lt"></div></section>
+</main>
+<footer>Eğitim amaçlıdır. Gerçek makinede üreticinin kılavuzunu esas alın.</footer>
+<div class="ov" id="ov"><div class="md" role="dialog" aria-modal="true"><button class="x" id="cx" aria-label="Kapat">✕</button>
+<div class="big" id="mc"></div><p id="mt"></p><p class="warn" id="mw" hidden></p>
+<div id="an"><canvas id="cv" width="1280" height="560"></canvas>
+<div class="bar"><span id="tl"></span><span><button class="btn" id="rp">↻ Tekrar oynat</button> <button class="btn i" id="ps">⏸ Duraklat</button></span></div>
+<p class="lg"><i class="r"></i>hızlı hareket<i class="k"></i>kesme hareketi</p><pre id="ex"></pre></div>
+<p id="na" class="mu" hidden>Bu kod için henüz animasyon yok; yukarıdaki açıklama ve kontrol notları geçerlidir.</p></div></div>
+<script>
+const $=s=>document.querySelector(s),L=300,X0=100,CY=150;
+const G=[["Temel Hareket Kodları",[
+["G00","Hızlı konumlama: takım kesme yapmadan, en yüksek hızla hedef noktaya gider."],
+["G01","Doğrusal kesme: takım F ilerlemesiyle düz çizgide giderek talaş kaldırır."],
+["G02","Saat yönünde yay: takım yarıçap (R) veya merkez (I, K) bilgisiyle saat yönünde yay çizer."],
+["G03","Saat yönünün tersine yay: G02 ile aynı mantık, ters yönde."],
+["G04","Bekleme: takımı belirli süre bekletir (X/U saniye, P milisaniye). Kanal dibini temizlemek için kullanılır."],
+["G18","ZX düzlemi seçimi: yay ve telafi hesaplarının torna düzleminde (X-Z) yapılmasını sağlar."],
+["G21","Metrik ölçü: değerler milimetre kabul edilir (G20 inç)."],
+["G28","Referans noktasına dönüş: takım ara noktadan geçip makinenin referans (ev) noktasına gider."]]],
+["Takım ve Koordinat Kodları",[
+["G40","Takım ucu yarıçap telafisini iptal eder."],
+["G41","Sol telafi: takım ucu yarıçapı, ilerleme yönünün soluna telafi edilir."],
+["G42","Sağ telafi: ilerleme yönünün sağına telafi edilir (dış çap işlemede sık kullanılır)."],
+["G50","Koordinat belirleme ve G96 için en yüksek devri (S) sınırlama."],
+["G54","İş parçası sıfır noktası: kayıtlı iş koordinat ofsetini (G54–G59) çağırır."]]],
+["Talaş Kaldırma Çevrimleri",[
+["G70","Finiş çevrimi: G71/G72/G73 ile kaba işlenmiş konturu son ölçüsüne getirir."],
+["G71","Dış/iç çap kaba talaş çevrimi: kontur boyunca Z yönünde birden fazla paso ile talaş kaldırır."],
+["G72","Alın kaba talaş çevrimi: X yönünde kesip Z’de adım atarak alın yüzeyinde talaş kaldırır."],
+["G73","Kontur tekrarlama çevrimi: döküm/dövme gibi konturu izleyen ham parçalarda kaba işleme."],
+["G74","Alın kanal / gagalamalı delme: Z yönünde kademeli girip çıkarak delik veya kanal açar."],
+["G75","Radyal kanal çevrimi: X yönünde dalıp kısa geri çekilerek (talaş kırma) kanal açar."],
+["G76","Çok paso vida çevrimi: vida kalemi, her pasoda biraz daha derine inerek diş profili oluşturur."]]],
+["Tornalama ve Vida Kodları",[
+["G90","Dış/iç çap kesme çevrimi (Fanuc A): dikdörtgen veya konik tek döngülü kesme."],
+["G92","Vida kesme çevrimi (Fanuc A): tek satırla vida paso döngüsü."],
+["G94","Alın kesme çevrimi (Fanuc A): alın yüzeyinde dilim dilim kesme döngüsü."],
+["G32","Vida açma: iş mili devriyle senkron, adım kadar ilerleyen tek paso vida hareketi."],
+["G33","Vida açma (bazı kontrollerde): G32 ile aynı görevi görür."]]],
+["Devir ve İlerleme Kodları",[
+["G96","Sabit kesme hızı: çap değiştikçe devir otomatik ayarlanır (S = m/dk)."],
+["G97","Sabit devir: S değeri doğrudan dev/dk’dır."],
+["G98","Dakikada ilerleme (mm/dk)."],
+["G99","Devir başına ilerleme (mm/dev): torna işlemede en yaygın ilerleme biçimi."]]],
+["Diğer Kodlar",[
+["G10","Veri girişi: program içinden ofset veya koordinat değerlerini yazar."],
+["G17","XY düzlemi seçimi (canlı takım / frezeleme için)."],
+["G19","YZ düzlemi seçimi (canlı takım / frezeleme için)."],
+["G31","Atlama fonksiyonu: sinyal gelene kadar ilerler (prob ölçümü)."],
+["G80","Sabit çevrim iptali."],
+["G81","Delik delme çevrimi (canlı takım / sabit çevrim)."],
+["G83","Derin delik (gagalamalı) delme çevrimi: alından delme."]]]];
+const M=[["M00","Program durdurma: makine durur, Başlat tuşuna basılana kadar bekler."],
+["M01","İsteğe bağlı durdurma: Opsiyonel Stop anahtarı açıksa durur."],
+["M02","Program sonu: programı bitirir."],
+["M03","İş mili saat yönünde dönmeye başlar (S ile devir)."],
+["M04","İş mili saat yönünün tersine döner."],
+["M05","İş mili durur."],
+["M06","Takım değiştirme: tornada çoğunlukla T komutu (örn. T0202) taret dönüşünü yapar; M06 kullanımı makineye göre değişir."],
+["M08","Soğutma sıvısı açılır."],
+["M09","Soğutma sıvısı kapanır."],
+["M10","Çene/aparat veya eksen kenetleme (makineye göre değişir)."],
+["M11","Çene/aparat veya eksen kenetlemeyi açma (makineye göre değişir)."],
+["M13","İş mili saat yönünde + soğutma sıvısı birlikte açılır (kontrole göre değişir)."],
+["M19","Mil oryantasyonu: mili belirli açıda durdurur (canlı takım, C ekseni)."],
+["M30","Program sonu ve başa dönüş: parça sayacını artırır, programın başına döner."],
+["M41","Mil düşük kademe (vites aralığı) seçimi."],
+["M42","Mil orta/yüksek kademe seçimi (M41–M44 makineye göre değişir)."],
+["M48","İlerleme ve mil override anahtarlarını aktif eder."],
+["M49","Override anahtarlarını iptal eder (%100 çalışır)."],
+["M98","Alt program çağırma (P ile program numarası)."],
+["M99","Alt program sonu: ana programa döner (ana programda döngü yapar)."]];
+const W={G71:"Fanuc A: iki satırlı format (G71 U R / G71 P Q U W F). Mitsubishi, Siemens gibi kontroller farklı yazar.",G75:"Fanuc A: iki satırlı format (G75 R / G75 X Z P Q F). P ve Q mikron cinsindendir; Siemens, Mitsubishi gibi kontrollerde çevrim farklı yazılır.",G76:"Fanuc: iki satırlı format (G76 P Q R / G76 X Z R P Q F). Diğer kontrollerde farklı yazılır.",G90:"Fanuc A sisteminde dış/iç çap kesme çevrimidir; Fanuc B/C ve bazı kontrollerde G90 mutlak ölçü programlamadır.",
+G92:"Fanuc A sisteminde vida kesme çevrimidir; B/C sistemlerinde ve bazı kontrollerde koordinat belirlemedir.",
+G94:"Fanuc A sisteminde alın kesme çevrimidir; bazı kontrollerde dakikada ilerleme anlamına gelir.",
+G98:"Fanuc torna A sisteminde mm/dk ilerlemedir; frez kontrollerinde sabit çevrimde başlangıç düzlemine dönüş anlamına gelir.",
+G99:"Fanuc torna A sisteminde mm/dev ilerlemedir; frez kontrollerinde sabit çevrimde R düzlemine dönüş anlamına gelir.",
+G50:"G kod sistemi B/C’de koordinat belirleme için G92 kullanılır.",
+G33:"Fanuc’ta vida için genellikle G32 kullanılır; G33 bazı kontrollerde (örn. Siemens, Mazak) vida kodudur."};
+const LT=[["X","Çap ekseni"],["Z","Boy ekseni"],["Y","Y ekseni"],["F","İlerleme"],["S","İş mili devri veya kesme hızı"],["T","Takım numarası"],["R","Yay yarıçapı veya çevrim parametresi"],["I","Yay merkezi X mesafesi"],["K","Yay merkezi Z mesafesi"],["P","Çevrim parametresi"],["Q","Paso veya çevrim parametresi"]];
+$("#lt").innerHTML=LT.map(a=>`<div><b>${a[0]}</b>${a[1]}</div>`).join("");
+
+/* ---- Animasyon tanımları ---- */
+const R=(z,x)=>["R",z,x],C=(z,x)=>["C",z,x],H=t=>["H",t],D=(ms,c)=>["D",ms,c],HM=R(380,105);
+const arc=(cz,cx,r,a0,a1,n=14)=>Array.from({length:n},(_,i)=>{const a=(a0+(a1-a0)*(i+1)/n)*Math.PI/180;return C(cz+r*Math.cos(a),cx+r*Math.sin(a))});
+const TN={turn:"Dış çap kesici (CNMG baklava uç)",face:"Dış çap kesici (alın yüzeyi tornalama)",groove:"Kanal açma kalemi (3 mm)",thread:"Vida kalemi (60° V uç)",drill:"Matkap (Ø16) · delik kesit olarak görünür"};
+const ps=(d,e)=>[R(308,d),C(e,d),R(e+4,d+5),R(308,d+5)];
+const pl=z=>[R(z,86),C(z,66),R(z,70),C(z,54),R(z,58),C(z,45),R(z,88)];
+const E={
+G00:{k:"turn",ex:"G00 X176. Z10.",s:[H("Mavi çizgi = hızlı hareket (G00). Takım parçaya hiç değmez."),R(310,88),R(310,4),H("Alından 10 mm önce durur; parça değişmedi."),HM]},
+G01:{k:"turn",ex:"G01 Z-150. F0.2",s:[H("G01: takım ilerleme hızıyla düz çizgide keser"),R(306,76),C(150,76),H("Mor çizgi = kesme. Çap 160 → 152 mm oldu."),R(150,92),HM]},
+G02:{k:"turn",ex:"G01 Z-100.\nG02 X160. Z-120. R20. F0.1",s:[H("G02: önce Ø120 mil yüzeyi kesilir"),R(310,60),C(200,60),H("Sonra saat yönünde (CW) yay: iç köşeye R20 verilir"),...arc(200,80,20,-90,-180),R(180,94),HM]},
+G03:{k:"turn",ex:"G01 X120.\nG03 X160. Z-20. R20. F0.1",s:[H("G03: saat yönünün tersine (CCW) yay: dış köşe yuvarlanır"),R(310,60),R(300,60),...arc(280,60,20,0,90),H("Parçanın ucu R20 ile yuvarlandı"),R(280,94),HM]},
+G04:{k:"groove",ex:"G01 X100. F0.05\nG04 P1500\nG00 X184.",s:[H("Kanal kalemi dalar"),R(150,90),C(150,50),H("G04 P1500: dipte bekler, taban temizlenir"),D(1500,1),R(150,92),HM]},
+G28:{k:"turn",ex:"G28 U0.\nG28 W0.",s:[["P",200,88],H("G28 U0.: önce X ekseni referansa gider (ara nokta)"),R(200,105),H("G28 W0.: sonra Z ekseni referansa gider"),HM]},
+G32:{k:"thread",i:"shaft",ex:"G00 X128. Z8.\nG32 Z-188. F8.\nG00 X156.",s:[H("G32: mil devriyle senkron tek paso vida (adım şekil için büyük)"),R(308,76),R(308,64),C(112,64),H("Yüzeyde tek pasoluk V kanal izi kaldı"),R(112,78),HM]},
+G70:{k:"turn",i:"rough",ex:"G70 P10 Q20",s:[H("G70: kaba işlenmiş parça (finiş payı kalmış)"),R(308,40),C(200,40),H("Kontur takip edilerek tek finiş pasosu"),C(200,62),C(110,62),C(110,82),H("Parça son ölçüsünde"),HM]},
+G71:{k:"turn",ex:"G71 U3. R1.\nG71 P10 Q20 U0.5 W0.1 F0.25",s:[H("G71: dış çapta kaba tornalama, çok paso"),...ps(72,112),...ps(65,112),H("Basamak oluştuğu için pasolar kısalıyor"),...ps(57,203),...ps(49,203),...ps(43,203),H("Kaba işleme bitti; finiş payı kaldı → G70 bitirir"),HM]},
+G72:{k:"face",ex:"G72 W4. R1.\nG72 P10 Q20 U0.5 W0.1 F0.25",s:[H("G72: alın yönünde kaba tornalama; her pasoda Z’de bir adım"),...[285,270,255,240].flatMap(z=>[R(z,90),C(z,45),R(z+6,51),R(z+6,90)]),H("Alın yüzeyinde basamak oluştu"),HM]},
+G74:{k:"drill",ex:"G74 R1.\nG74 Z-90. Q30000 F0.1",s:[H("G74: alından gagalamalı delme; matkap eksende kademeli ilerler"),R(310,0),C(270,0),H("Kısa geri çekilme talaşı kırar"),R(272,0),R(271,0),C(240,0),R(242,0),R(241,0),C(210,0),H("Hedef derinlik Z-90; matkap çıkar"),R(310,0),HM]},
+G75:{k:"groove",ex:"G75 R1.\nG75 X90. Z-127. P10000 Q9000 F0.08",s:[H("G75: radyal kanal; kalem X’te parçaya dalar, kısa çekilip talaşı kırar"),...[200,191,182,173].flatMap((z,i)=>[H("Z konumu "+(i+1)+"/4: kademeli dalış, kısa geri çekilme"),R(z,86),C(z,70),R(z,72),R(z,71),C(z,60),R(z,62),R(z,61),C(z,50),R(z,52),R(z,51),C(z,45),R(z,88)]),H("Kanal açıldı: taban Ø90, genişlik 37 mm"),HM]},
+G76:{k:"thread",i:"shaft",ex:"G76 P020060 Q100 R50\nG76 X124. Z-188. P3000 Q1000 F8.",s:[H("G76: vida çevrimi; paso derinliği her seferinde azalır"),...[65,63.2,62.4,62].flatMap((d,i)=>[H((i+1)+". paso: diş derinleşiyor"),R(308,76),R(308,d),C(112,d),R(112,78)]),H("Diş profili hazır"),HM]},
+G90:{k:"turn",ex:"G90 X144. Z-150. F0.2\nX128.\nX112.",s:[H("G90: 4 hareketli döngü; X her tekrarda daha derine iner"),...[72,64,56].flatMap(x=>[R(306,x),C(150,x),C(150,90),R(306,90)]),H("① hızlı dal ② Z’de kes ③ X’te geri çık ④ hızlı başa dön"),HM]},
+G94:{k:"face",ex:"G94 X0. Z-6. F0.1\nZ-12.\nZ-18.",s:[H("G94: alın kesme çevrimi; dilim dilim alın tıraşlanır"),...[294,288,282].flatMap(z=>[R(z,88),C(z,0),C(306,0),R(306,88)]),H("Alın yüzeyi işlendi; parça biraz kısaldı"),HM]},
+G96:{k:"face",ex:"G50 S3000\nG96 S150 M03\nG01 X0. F0.1",s:[H("G96: sabit kesme hızı; çap küçüldükçe devir artar"),R(296,86),C(296,0),H("Merkeze yaklaşınca devir G50 S3000 ile sınırlanır"),R(302,10),HM]},
+G97:{k:"turn",ex:"G97 S1000 M03\nG01 Z-150. F0.2",s:[H("G97: devir sabit; çap küçüldükçe kesme hızı (Vc) düşer"),...[[70,150],[56,150],[44,220]].flatMap(([x,e])=>ps(x,e)),HM]},
+G73:{k:"turn",i:"forged",ex:"G73 U12. W0. R3\nG73 P10 Q20 U0.5 W0.1 F0.25",s:[H("G73: ham parça kontura yakın; takım konturu ofsetle tekrarlar"),...[8,4,0].flatMap((o,i)=>[H((i+1)+". paso: kontur "+o+" mm payla izlenir"),R(308,40+o),C(200,40+o),C(200,62+o),C(110,62+o),R(110,90),R(308,90)]),H("Parça konturuna ulaştı; finiş için G70"),HM]},
+M10:{k:"turn",s0:0,j0:94,s:[H("Çeneler açık: parça serbest"),D(1200),["J",1],H("M10: ayna çeneleri kapanır, parça sıkılır"),D(1800)]},
+M11:{k:"turn",s0:0,s:[H("Çeneler parçayı sıkıyor"),D(1200),["J",0],H("M11: ayna çeneleri açılır, parça serbest kalır"),D(1800)]},
+M13:{k:"turn",s0:0,s:[["P",250,86],D(700),["S",800],["W",1],H("M13: mil saat yönünde döner ve soğutma aynı anda açılır"),D(2800)]},
+M19:{k:"turn",s0:900,s:[H("Mil dönüyor"),D(800),["S",0],["O"],H("M19: mil durur, 0° konumuna yönlendirilip kilitlenir"),D(2800)]},
+M00:{k:"turn",s:[R(306,76),C(230,76),["S",0],H("M00: program durdu; Başlat (Cycle Start) tuşunu bekler"),D(2400),["S",800],H("Cycle Start ile devam"),C(170,76),R(170,92),HM]},
+M03:{k:"turn",s0:0,s:[H("Mil duruyor"),D(700),["S",1000],H("M03 S1000: mil saat yönünde (↻) dönmeye başlar"),D(2600)]},
+M04:{k:"turn",s0:0,s:[H("Mil duruyor"),D(700),["S",-1000],H("M04 S1000: mil saat yönünün tersine (↺) döner"),D(2600)]},
+M05:{k:"turn",s0:1000,s:[H("Mil dönüyor"),D(900),["S",0],H("M05: mil durur"),D(2400)]},
+M06:{k:"turn",s0:0,s:[H("T0101: dış çap kesici devrede"),D(900),["T","groove"],H("T0202: taret döner, kanal kalemi devreye girer"),D(1300),["T","thread"],H("T0303: vida kalemi devrede"),D(1300),["T","turn"],H("T0101: ilk takıma dönüş"),D(1000)]},
+M08:{k:"turn",s:[H("M08: soğutma sıvısı açılır, kesme bölgesine akar"),R(306,76),["W",1],C(170,76),H("Sıvı takımı ve talaşı soğutur"),D(1000)]},
+M09:{k:"turn",s:[R(306,76),["W",1],C(230,76),H("M09: soğutma sıvısı kapanır"),["W",0],C(170,76),D(900)]}};
+E.G96.hud=r=>{const n=150000/(Math.PI*2*Math.max(r,1));return{n:Math.min(3000,Math.round(n)),t:"Vc 150 m/dk sabit · Ø"+(2*r).toFixed(0)+" mm"+(n>3000?" · G50 S3000 sınırı":"")}};
+E.G97.hud=r=>({n:1000,t:"n 1000 dev/dk sabit · Ø"+(2*r).toFixed(0)+" mm → Vc "+(Math.PI*2*r).toFixed(0)+" m/dk"});
+const INIT={stock:r=>r.fill(80),rough:r=>{for(let z=0;z<=L;z++)r[z]=z<112?80:z<203?65:43},forged:r=>{for(let z=0;z<=L;z++)r[z]=z<112?80:z<203?74:52},shaft:r=>{for(let z=0;z<=L;z++)r[z]=z<100?80:68}};
+const TP={turn:[[0,0],[60,0],[60,-34],[14,-34]],groove:[[-5,0],[5,0],[5,-50],[60,-50],[60,-66],[-5,-66]],thread:[[0,0],[9,-14],[60,-14],[60,-44],[-9,-44],[-9,-14]],drill:[[0,0],[14,-8],[130,-8],[130,8],[14,8]]};
+
+/* ---- Tablolar, arama, filtre ---- */
+const ALL={};
+const tbl=(arr,type)=>`<div class="wr"><table><thead><tr><th>Kod</th><th>Görevi</th><th>İncele / Animasyonu Gör</th></tr></thead><tbody>`+arr.map(([c,d])=>{ALL[c]={d,type};return `<tr data-c="${c}"><td>${c}</td><td>${d}${W[c]?' <span class="w" title="Kontrol sistemine göre değişir">⚠</span>':''}</td><td class="go"><button class="btn${E[c]?'':' i'}"><i>${E[c]?'▶':'›'}</i><span>${E[c]?'Animasyonu gör':'İncele'}</span></button></td></tr>`}).join("")+`</tbody></table></div>`;
+$("#gt").innerHTML=G.map(g=>`<div class="cat" data-cat="${g[0]}"><h3>${g[0]}</h3>${tbl(g[1],"G")}</div>`).join("");
+$("#mt2").innerHTML=`<div class="cat" data-cat="M Kodları">${tbl(M,"M")}</div>`;
+let f="all";
+const chips=[["all","Tümü"],["G","G Kodları"],["M","M Kodları"],...G.map(g=>[g[0],g[0].replace(/ Kodları$/,"")])];
+$("#ch").innerHTML=chips.map(c=>`<button class="chip${c[0]=="all"?" on":""}" data-f="${c[0]}">${c[1]}</button>`).join("");
+$("#ch").onclick=e=>{const b=e.target.closest(".chip");if(!b)return;f=b.dataset.f;document.querySelectorAll(".chip").forEach(x=>x.classList.toggle("on",x==b));F()};
+function F(){const q=$("#q").value.trim().toLowerCase().replace(/\s/g,"");let n=0;
+document.querySelectorAll("tbody tr").forEach(tr=>{const c=tr.dataset.c,a=ALL[c],cat=tr.closest(".cat").dataset.cat;let ok=f=="all"||f==a.type||f==cat;
+if(ok&&q)ok=/^[gm]\d*$/.test(q)?c.toLowerCase().startsWith(q):(c+" "+a.d).toLowerCase().includes(q);tr.hidden=!ok;n+=ok});
+document.querySelectorAll(".cat").forEach(s=>s.hidden=!s.querySelector("tr:not([hidden])"));
+document.querySelectorAll(".cs").forEach(s=>s.hidden=!s.querySelector(".cat:not([hidden])"));$("#no").hidden=n>0}
+$("#q").oninput=F;
+document.querySelectorAll("tbody").forEach(t=>t.onclick=e=>{const r=e.target.closest("tr");if(r)openM(r.dataset.c)});
+$("#bg").onclick=()=>$("#mn").classList.toggle("open");
+$("#mn").onclick=()=>$("#mn").classList.remove("open");
+
+/* ---- Animasyon motoru ---- */
+const cv=$("#cv"),X=cv.getContext("2d");X.scale(2,2);
+let S={on:0};
+function tl(){$("#tl").textContent="Takım: "+TN[S.kind]}
+function reset(){const d=S.d;S.r=new Float32Array(L+1);S.h=new Float32Array(L+1);INIT[d.i||"stock"](S.r);S.tz=380;S.tr=105;S.kind=d.k;S.q=d.s;S.i=0;S.cap="";S.cool=0;S.sp=S.sT=d.s0??800;S.ang=0;S.pl=[];S.dw=null;S.cnt=null;S.lc=80;S.q8=null;S.ph=0;S.inf="";S.or=0;S.jr=S.jt=d.j0??80;S.paused=false;$("#ps").textContent="⏸ Duraklat";tl()}
+function dig(z0,x0){const{r,h,kind:k}=S,z=S.tz,x=S.tr,a=Math.max(0,Math.floor(Math.min(z,z0))),b=Math.min(L,Math.ceil(Math.max(z,z0)));
+if(k=="turn"){const v=(x+x0)/2;for(let i=a;i<=b;i++)if(v<r[i])r[i]=v}
+else if(k=="face"){for(let i=a;i<=L;i++)if(x<r[i])r[i]=x}
+else if(k=="groove"){for(let i=Math.max(0,Math.ceil(z-5));i<=Math.min(L,Math.floor(z+5));i++)if(x<r[i])r[i]=x}
+else if(k=="thread"){const q=Math.floor(z/8);if(q!=S.q8){S.q8=q;const c=(q+1)*8;for(let i=Math.max(0,c-8);i<=Math.min(L,c+8);i++){const v=x+Math.abs(i-c)*1.5;if(v<r[i])r[i]=v}}}
+else if(k=="drill"){for(let i=a;i<=L;i++)S.h[i]=8}}
+function mv(z,x,cut){const o=[S.tz,S.tr];let l=S.pl[S.pl.length-1];if(!l||l.c!=cut){l={c:cut,p:[[X0+o[0],CY-o[1]]]};S.pl.push(l)}S.tz=z;S.tr=x;l.p.push([X0+z,CY-x]);if(cut){S.lc=x;dig(o[0],o[1])}}
+function step(dt){let rem=dt,g=0;
+while(rem>0&&S.i<S.q.length&&g++<500){const it=S.q[S.i],t=it[0];
+if(t=="H")S.cap=it[1];else if(t=="S")S.sT=it[1];else if(t=="W")S.cool=it[1];else if(t=="T"){S.kind=it[1];tl()}else if(t=="P"){S.tz=it[1];S.tr=it[2]}else if(t=="J")S.jt=it[1]?80:94;else if(t=="O")S.or=1;
+else if(t=="D"){if(S.dw==null)S.dw=it[1];S.dw-=rem*1000;S.cnt=it[2]?S.dw:null;if(S.dw>0){rem=0;break}rem=-S.dw/1000;S.dw=null;S.cnt=null}
+else{const dz=it[1]-S.tz,dx=it[2]-S.tr,d=Math.hypot(dz,dx);if(d>1e-6){const sp=t=="R"?520:230,m=Math.min(sp*rem,d,2);mv(S.tz+dz/d*m,S.tr+dx/d*m,t=="C");rem-=m/sp;continue}}
+S.i++}}
+function wrap(t){if(t.length<=62)return[t];const i=t.lastIndexOf(" ",62);return[t.slice(0,i),t.slice(i+1)]}
+const GC={};function gr(R){if(!GC[R]){const g=X.createLinearGradient(0,CY-R,0,CY+R);[[0,"#566176"],[.2,"#c9d3e3"],[.42,"#eef2f8"],[.72,"#98a4b9"],[1,"#444e62"]].forEach(a=>g.addColorStop(a[0],a[1]));GC[R]=g}return GC[R]}
+function draw(dt){const c=X;c.clearRect(0,0,640,280);
+c.setLineDash([10,3,2,3]);c.strokeStyle="#33425f";c.lineWidth=1;c.beginPath();c.moveTo(0,CY);c.lineTo(640,CY);c.stroke();c.setLineDash([]);
+S.jr+=(S.jt-S.jr)*Math.min(1,dt*6);
+c.fillStyle="#141c30";c.fillRect(34,CY-96,66,192);c.strokeStyle="#33425f";c.strokeRect(34.5,CY-95.5,66,191);
+c.fillStyle=gr(80);c.fillRect(62,CY-80,38,160);c.fillStyle="#9aa6ba";c.fillRect(56,CY-S.jr-16,44,16);c.fillRect(56,CY+S.jr,44,16);
+const rr=Array.from(S.r,Math.round);let hz=0;
+for(let z=0;z<=L;z++){const R=rr[z];if(R>0){c.fillStyle=gr(R);c.fillRect(X0+z,CY-R,1,2*R)}if(S.h[z]>0)hz=1}
+c.lineWidth=1;for(let k=0;k<8;k++){const th=S.ang+k*Math.PI/4,s=Math.sin(th),a=Math.cos(th);if(a<.2)continue;c.strokeStyle="rgba(15,22,40,"+(.3*a).toFixed(2)+")";c.beginPath();let on=0;for(let z=0;z<=L;z++){if(!rr[z]){on=0;continue}const y=CY-rr[z]*s;on?c.lineTo(X0+z,y):c.moveTo(X0+z,y);on=1}c.stroke()}
+if(hz)for(let z=0;z<=L;z++){const h=Math.round(S.h[z]);if(h>0){c.fillStyle="#070a11";c.fillRect(X0+z,CY-h,1,2*h);c.fillStyle="#8593ab";c.fillRect(X0+z,CY-h-1,1,1);c.fillRect(X0+z,CY+h,1,1)}}
+S.pl.forEach(l=>{c.setLineDash(l.c?[]:[5,4]);c.lineWidth=l.c?2:1.2;c.strokeStyle=l.c?"#8f82e8":"#a8c8f0";c.beginPath();l.p.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.stroke()});c.setLineDash([]);
+const tx=X0+S.tz,ty=CY-S.tr;c.save();c.translate(tx,ty);c.beginPath();TP[S.kind=="face"?"turn":S.kind].forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath();c.fillStyle="#b7c2d6";c.fill();c.strokeStyle="#eef2f8";c.lineWidth=1.2;c.stroke();c.restore();
+c.fillStyle="#8f82e8";c.beginPath();c.arc(tx,ty,3,0,7);c.fill();
+if(S.cool){S.ph+=dt*1.3;c.fillStyle="#7aa2d6";c.fillRect(X0+190,8,22,12);c.fillStyle="#a8c8f0";for(let i=0;i<10;i++){const u=(i/10+S.ph)%1;c.beginPath();c.arc(X0+201+(tx-X0-201)*u,20+(ty-20)*u,2.2,0,7);c.fill()}}
+if(S.d.hud){const o=S.d.hud(S.lc);S.sT=o.n;S.inf=o.t}
+if(S.or&&Math.abs(S.sp)<40){S.sT=0;const t=Math.round(S.ang/6.283)*6.283;S.ang+=(t-S.ang)*Math.min(1,dt*5)}
+S.sp+=(S.sT-S.sp)*Math.min(1,dt*3);S.ang+=S.sp/60*6.283*dt*.06;
+c.strokeStyle="#a8c8f0";c.lineWidth=2;c.beginPath();c.arc(44,28,16,0,7);c.stroke();c.beginPath();c.moveTo(44,28);c.lineTo(44+15*Math.cos(S.ang),28+15*Math.sin(S.ang));c.stroke();
+c.fillStyle="#dfe6f2";c.font="600 13px system-ui,sans-serif";c.textAlign="left";const n=Math.abs(S.sp);
+c.fillText("İş mili: "+(n<5?(S.or?"yönlendirildi (0°)":"duruyor"):Math.round(n)+" dev/dk "+(S.sp>0?"↻":"↺")),70,33);
+c.fillStyle="#c4bcf2";c.fillText(S.inf,12,243);
+c.fillStyle="#dfe6f2";wrap(S.cap+(S.cnt!=null?"  ⏱ "+Math.max(0,S.cnt/1000).toFixed(1)+" sn":"")).forEach((t,i)=>c.fillText(t,12,258+i*15));
+c.fillStyle="#8593ab";c.textAlign="right";c.fillText("X "+(2*S.tr).toFixed(1)+"  Z "+(S.tz-L).toFixed(1),630,273);c.textAlign="left"}
+function loop(t){if(!S.on)return;const dt=Math.min(.05,(t-S.t0)/1000||0);S.t0=t;if(!S.paused)step(dt);draw(dt);S.raf=requestAnimationFrame(loop)}
+function openM(code){const a=ALL[code],d=E[code];$("#mc").textContent=code;$("#mt").textContent=a.d;
+const w=W[code]||(a.type=="M"?"M kodları makine üreticisine göre değişebilir; makinenizin kılavuzuna bakın.":"");$("#mw").hidden=!w;$("#mw").textContent=w?"⚠ "+w:"";
+$("#an").hidden=!d;$("#na").hidden=!!d;
+$("#ov").classList.add("on");
+if(d){S={on:1,d,t0:performance.now()};$("#ex").hidden=!d.ex;$("#ex").textContent=d.ex||"";reset();S.raf=requestAnimationFrame(loop)}else S.on=0}
+function closeM(){$("#ov").classList.remove("on");S.on=0;cancelAnimationFrame(S.raf)}
+$("#cx").onclick=closeM;$("#ov").onclick=e=>{if(e.target.id=="ov")closeM()};
+document.onkeydown=e=>{if(e.key=="Escape")closeM()};
+$("#rp").onclick=reset;
+$("#ps").onclick=()=>{S.paused=!S.paused;$("#ps").textContent=S.paused?"▶ Devam":"⏸ Duraklat"};
+</script></body></html>
